@@ -1,0 +1,33 @@
+{
+  "name":           "bright-flow",
+  "main":           "./lib/index.js",
+  "version":        "0.0.1",
+  "description":    "control flow library",
+  "keywords":       ["async", "await", "control", "flow"],
+  "author":         "Lei Zongmin <leizongmin@gmail.com>",
+  "contributors": [
+    {"name": "Lei Zongmin", "email": "leizongmin@gmail.com"}
+  ],
+  "licenses":     [{
+    "type":         "MIT",
+    "url":          "https://raw.github.com/leizongmin/bright-flow/master/MIT-License"
+  }],
+  "repository": {
+    "type":         "git",
+    "url":          "git://github.com/leizongmin/bright-flow.git"
+  },
+  "bugs":{
+    "url":          "https://github.com/leizongmin/bright-flow/issues"
+  },
+  "engines": {
+    "node":         ">= 0.6.0"
+  },
+  "devDependencies": {
+    "should":       "*",
+    "mocha":        ">= 1.2",
+    "browserify":   ">= 1.16.5"
+  },
+  "scripts": {
+    "test":         "mocha -t 5000"
+  }
+}
