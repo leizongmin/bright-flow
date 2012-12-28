@@ -46,7 +46,7 @@ _.each([1,2,3,4,5]).do(function (v, i, arr) {
 });
 
 // 并行
-_.parallel(function () {
+_.parallel(100).do(function () {
   console.log('1');
   this.done();
 }).do(function () {
@@ -60,7 +60,7 @@ _.parallel(function () {
 });
 
 // 串行
-_.series(function () {
+_.series().do(function () {
   console.log('1');
   this.done();
 }).do(function () {
