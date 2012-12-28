@@ -5,7 +5,7 @@
 var assert = require('assert');
 var _ = require('../');
 
-describe('#if', function () {
+describe('#series', function () {
   
   it('#series', function (done) {
     var data = [];
@@ -18,7 +18,8 @@ describe('#if', function () {
     }).do(function () {
       data.push(3);
       this.done();
-    }).end(function () {
+    }).end(function (isTimeout) {
+      assert.notEqual(isTimeout, true);
       assert.deepEqual(data, [1,2,3]);
       done();
     });
@@ -35,7 +36,8 @@ describe('#if', function () {
     }).do(function () {
       data.push(3);
       this.done();
-    }).end(function () {
+    }).end(function (isTimeout) {
+      assert.notEqual(isTimeout, true);
       assert.deepEqual(data, [1,2]);
       done();
     });
@@ -51,7 +53,8 @@ describe('#if', function () {
       this.done();
     }).do(function () {
       data.push(3);
-    }).timeout(100).end(function () {
+    }).timeout(100).end(function (isTimeout) {
+      assert.equal(isTimeout, true);
       assert.deepEqual(data, [1,2,3]);
       done();
     });
@@ -66,7 +69,8 @@ describe('#if', function () {
       data.push(2);
     }).do(function () {
       data.push(3);
-    }).timeout(100).end(function () {
+    }).timeout(100).end(function (isTimeout) {
+      assert.equal(isTimeout, true);
       assert.deepEqual(data, [1,2]);
       done();
     });

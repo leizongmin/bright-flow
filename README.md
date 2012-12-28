@@ -46,7 +46,7 @@ _.each([1,2,3,4,5]).do(function (v, i, arr) {
 });
 
 // 并行
-_.parallel(100).do(function () {
+_.parallel().do(function () {
   console.log('1');
   this.done();
 }).do(function () {
