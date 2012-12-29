@@ -1,7 +1,7 @@
 {
   "name":           "bright-flow",
   "main":           "./lib/index.js",
-  "version":        "0.0.1",
+  "version":        "0.0.2",
   "description":    "control flow library",
   "keywords":       ["async", "await", "control", "flow"],
   "author":         "Lei Zongmin <leizongmin@gmail.com>",
@@ -23,9 +23,7 @@
     "node":         ">= 0.6.0"
   },
   "devDependencies": {
-    "should":       "*",
-    "mocha":        ">= 1.2",
-    "browserify":   ">= 1.16.5"
+    "mocha":        ">= 1.2"
   },
   "scripts": {
     "test":         "mocha -t 5000"
