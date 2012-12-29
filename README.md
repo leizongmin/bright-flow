@@ -24,9 +24,10 @@ _.if(a > b).then(function () {
   // 执行this.done()表示已处理完毕
   this.done();
 }).elseif(a < b).then(function () {
+  var me = this;
   console.log('a < b');
   setTimeout(function () {
-    this.done();
+    me.done();
   }, 1000);
 }).else(function () {
   console.log('wrong');
