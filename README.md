@@ -71,9 +71,11 @@ _.parallel().do(function () {
 }).do(function () {
   console.log('3');
   this.done();
-}).timeout(1000).end(function () {
+}).timeout(1000).end(function (isTimeout) {
   // timeout()用于设置超时时间，当省略时表示不限制时间
   // timeout()必须在end()之前
+  // 当任务超时返回，则isTimeout=true
+  if (isTimeout) console.log('task timeout');
   console.log('end parallel task');
 });
 
@@ -88,9 +90,10 @@ _.series().do(function () {
 }).do(function () {
   console.log('3');
   this.done();
-}).timeout(1000).end(function () {
+}).timeout(1000).end(function (isTimeout) {
   // timeout()用于设置超时时间，当省略时表示不限制时间
   // timeout()必须在end()之前
+  if (isTimeout) console.log('task timeout');
   console.log('end series task');
 });
 
