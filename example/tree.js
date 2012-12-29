@@ -57,6 +57,7 @@ var tree = function (dir, indent, isLast, cb) {
             }
           }
         });
+        
       }).end(function () {
         // 回调函数
         cb(files.length + subTotalFile);
