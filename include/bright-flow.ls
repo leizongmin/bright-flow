@@ -33,11 +33,9 @@
 (macro #each (cond...)
   ($$__flow.each (#fn () ~cond...)))
 
-(macro #parallel (cond...)
-  ($$__flow.parallel (#fn () ~cond...)))
+(macro #parallel () ($$__flow.parallel))
 
-(macro #series (cond...)
-  ($$__flow.series (#fn () ~cond...)))
+(macro #series ($$__flow.series))
 
 (macro #timeout (rest...)
   (.timeout ~rest...))
