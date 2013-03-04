@@ -212,4 +212,16 @@ describe('#if', function () {
     });
   });
 
+  it('timeout - 2', function (done) {
+    var ret = null;
+    _.if(true).then(function () {
+      ret = 123456;
+      this.done();
+    }).timeout(100).end(function (isTimeout) {
+      assert.equal(isTimeout, false);
+      assert.equal(ret, 123456);
+      done();
+    });
+  });
+
 })
