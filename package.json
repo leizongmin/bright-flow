@@ -1,7 +1,7 @@
 {
   "name":           "bright-flow",
   "main":           "./lib/index.js",
-  "version":        "0.0.2",
+  "version":        "0.0.3",
   "description":    "control flow library",
   "keywords":       ["async", "await", "control", "flow"],
   "author":         "Lei Zongmin <leizongmin@gmail.com>",
