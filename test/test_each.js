@@ -44,4 +44,28 @@ describe('#each', function () {
     });
   });
 
+  it('timeout - 1', function (done) {
+    var data = [];
+    _.each([1,2,3,4,5]).do(function (v, i) {
+      data.push(i + ':' + v);
+      if (i < 3) this.done();
+    }).timeout(100).end(function (isTimeout) {
+      assert.equal(isTimeout, true);
+      assert.deepEqual(data, ['0:1','1:2','2:3','3:4']);
+      done();
+    });
+  });
+
+  it('timeout - 2', function (done) {
+    var data = [];
+    _.each([1,2,3,4,5]).do(function (v, i) {
+      data.push(i + ':' + v);
+      this.done();
+    }).timeout(100).end(function (isTimeout) {
+      assert.equal(isTimeout, false);
+      assert.deepEqual(data, ['0:1','1:2','2:3','3:4', '4:5']);
+      done();
+    });
+  });
+
 })
