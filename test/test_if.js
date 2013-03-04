@@ -201,4 +201,15 @@ describe('#if', function () {
     });
   });
 
+  it('timeout - 1', function (done) {
+    var ret = null;
+    _.if(true).then(function () {
+      ret = 123456;
+    }).timeout(100).end(function (isTimeout) {
+      assert.equal(isTimeout, true);
+      assert.equal(ret, 123456);
+      done();
+    });
+  });
+
 })
