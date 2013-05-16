@@ -1,0 +1,9 @@
+{
+  "name":         "The bright-flow API",
+  "description":  "The control flow library",
+  "version":      "0.1.0",
+  "url":          "http://ucdok.com/bright-flow",
+  "options": {
+    "outdir":     "./doc"
+  }
+}
