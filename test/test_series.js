@@ -18,8 +18,8 @@ describe('#series', function () {
     }).do(function () {
       data.push(3);
       this.done();
-    }).end(function (isTimeout) {
-      assert.notEqual(isTimeout, true);
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, [1,2,3]);
       done();
     });
@@ -37,8 +37,8 @@ describe('#series', function () {
     }).do(function () {
       data.push(3);
       setTimeout(this.done.bind(this), 100);
-    }).end(function (isTimeout) {
-      assert.notEqual(isTimeout, true);
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, [1,2,3]);
       assert.ok(Date.now() - timestamp > 300)
       done();
@@ -56,8 +56,9 @@ describe('#series', function () {
     }).do(function () {
       data.push(3);
       this.done();
-    }).end(function (isTimeout) {
-      assert.notEqual(isTimeout, true);
+    }).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.BREAK);
       assert.deepEqual(data, [1,2]);
       done();
     });
@@ -73,8 +74,9 @@ describe('#series', function () {
       this.done();
     }).do(function () {
       data.push(3);
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, true);
+    }).timeout(100).end(function (err) {
+      assert.notEqual(err, null)
+      assert.equal(err.code, _.BrightFlowError.TIMEOUT);
       assert.deepEqual(data, [1,2,3]);
       done();
     });
@@ -89,11 +91,24 @@ describe('#series', function () {
       data.push(2);
     }).do(function () {
       data.push(3);
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, true);
+    }).timeout(100).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.TIMEOUT);
       assert.deepEqual(data, [1,2]);
       done();
     });
+  });
+
+  it('#error', function (done) {
+    var reterr = new Error('Test');
+    _.series().do(function () {
+      this.done(reterr);
+    }).do(function () {
+      throw new Error('Do not run here');
+    }).end(function (err) {
+      assert.equal(err, reterr);
+      done();
+    })
   });
 
 })
