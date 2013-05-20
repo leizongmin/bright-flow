@@ -12,7 +12,8 @@ describe('#each', function () {
     _.each([1,2,3,4,5]).do(function (v, i) {
       data.push(i + ':' + v);
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, ['0:1','1:2','2:3','3:4','4:5']);
       done();
     });
@@ -23,7 +24,8 @@ describe('#each', function () {
     _.each({a:1, b:2, c:3, d:4, e:5}).do(function (v, i) {
       data.push(i + ':' + v);
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, ['a:1','b:2','c:3','d:4','e:5']);
       done();
     });
@@ -38,34 +40,28 @@ describe('#each', function () {
         data.push(i + ':' + v);
         this.done();
       }
-    }).end(function () {
+    }).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.BREAK);
       assert.deepEqual(data, ['0:1','1:2','2:3']);
       done();
     });
   });
-
-  it('timeout - 1', function (done) {
-    var data = [];
-    _.each([1,2,3,4,5]).do(function (v, i) {
-      data.push(i + ':' + v);
-      if (i < 3) this.done();
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, true);
-      assert.deepEqual(data, ['0:1','1:2','2:3','3:4']);
+  
+  it('timeout', function (done) {
+    _.each([1,2,3,4,5,6,7,8,9,10], function () {
+      return true;
+    }).do(function () {
+      var me = this;
+      setTimeout(function () {
+        if (!me._returned) {
+          me.done();
+        }
+      }, 20);
+    }).timeout(100).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.TIMEOUT);
       done();
     });
   });
-
-  it('timeout - 2', function (done) {
-    var data = [];
-    _.each([1,2,3,4,5]).do(function (v, i) {
-      data.push(i + ':' + v);
-      this.done();
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, false);
-      assert.deepEqual(data, ['0:1','1:2','2:3','3:4', '4:5']);
-      done();
-    });
-  });
-
 })
