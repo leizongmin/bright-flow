@@ -12,7 +12,8 @@ describe('#if', function () {
     _.if(true).then(function () {
       ret = 123456;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 123456);
       done();
     });
@@ -23,7 +24,8 @@ describe('#if', function () {
     _.if(false).then(function () {
       ret = 123456;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, null);
       done();
     });
@@ -37,7 +39,8 @@ describe('#if', function () {
     }).else(function () {
       ret = 456;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 123);
       done();
     });
@@ -51,7 +54,8 @@ describe('#if', function () {
     }).else(function () {
       ret = 456;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 456);
       done();
     });
@@ -68,7 +72,8 @@ describe('#if', function () {
     }).else(function () {
       ret = 789;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 123);
       done();
     });
@@ -85,7 +90,8 @@ describe('#if', function () {
     }).else(function () {
       ret = 789;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 456);
       done();
     });
@@ -102,7 +108,8 @@ describe('#if', function () {
     }).else(function () {
       ret = 789;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 789);
       done();
     });
@@ -116,7 +123,8 @@ describe('#if', function () {
     }).elseif(true).then(function () {
       ret = 456;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 123);
       done();
     });
@@ -130,7 +138,8 @@ describe('#if', function () {
     }).elseif(true).then(function () {
       ret = 456;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 456);
       done();
     });
@@ -144,7 +153,8 @@ describe('#if', function () {
     }).elseif(false).then(function () {
       ret = 456;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, null);
       done();
     });
@@ -161,7 +171,8 @@ describe('#if', function () {
     }).elseif(true).then(function () {
       ret = 789;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 123);
       done();
     });
@@ -178,7 +189,8 @@ describe('#if', function () {
     }).elseif(true).then(function () {
       ret = 789;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 456);
       done();
     });
@@ -195,7 +207,8 @@ describe('#if', function () {
     }).elseif(true).then(function () {
       ret = 789;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.equal(ret, 789);
       done();
     });
@@ -205,20 +218,9 @@ describe('#if', function () {
     var ret = null;
     _.if(true).then(function () {
       ret = 123456;
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, true);
-      assert.equal(ret, 123456);
-      done();
-    });
-  });
-
-  it('timeout - 2', function (done) {
-    var ret = null;
-    _.if(true).then(function () {
-      ret = 123456;
-      this.done();
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, false);
+    }).timeout(100).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.TIMEOUT);
       assert.equal(ret, 123456);
       done();
     });
