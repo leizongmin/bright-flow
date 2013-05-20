@@ -5,11 +5,18 @@ bright-flow
 
 JavaScript异步流程控制库
 
-安装
+Node.js
 ========
 
 ```bash
 npm install bright-flow
+```
+
+浏览器端
+========
+
+```html
+<script src="https://github.com/leizongmin/bright-flow/blob/master/build/bright-flow.min.js"></script>
 ```
 
 

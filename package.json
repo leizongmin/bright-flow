@@ -23,7 +23,8 @@
     "node":         ">= 0.6.0"
   },
   "devDependencies": {
-    "mocha":        "~1.8.1"
+    "mocha":        "~1.8.1",
+    "uglify-js":    "~2.3"
   },
   "scripts": {
     "test":         "mocha -t 5000"

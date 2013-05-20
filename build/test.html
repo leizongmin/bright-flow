@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+  <title>测试</title>
+  <meta charset="utf8">
+</head>
+<body>
+<h1 id="status"></h1>
+</body>
+</html>
+<script src="bright-flow.min.js"></script>
+<script>
+var i = 0;
+brightFlow.for(function () {
+  return i < 1000;
+}).do(function (done) {
+  setTimeout(function () {
+    document.querySelector('#status').innerHTML = 'i=' + i;
+    i++;
+    done();
+  }, 500);
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+</script>
