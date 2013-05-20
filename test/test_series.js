@@ -64,6 +64,24 @@ describe('#series', function () {
     });
   });
 
+  it('#series - break - no error', function (done) {
+    var data = [];
+    _.series().do(function () {
+      data.push(1);
+      this.done();
+    }).do(function () {
+      data.push(2);
+      this.break(null);
+    }).do(function () {
+      data.push(3);
+      this.done();
+    }).end(function (err) {
+      assert.equal(err, null);
+      assert.deepEqual(data, [1,2]);
+      done();
+    });
+  });
+
   it('#series - timeout - 1', function (done) {
     var data = [];
     _.series().do(function () {
