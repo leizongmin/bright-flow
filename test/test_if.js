@@ -31,6 +31,36 @@ describe('#if', function () {
     });
   });
 
+  it('if - sync condition', function (done) {
+    var ret = null;
+    _.if(function () {
+      return false;
+    }).then(function () {
+      ret = 123456;
+      this.done();
+    }).end(function (err) {
+      assert.equal(err, null);
+      assert.equal(ret, null);
+      done();
+    });
+  });
+
+  it('if - async condition', function (done) {
+    var ret = null;
+    _.if(function (callback) {
+      setTimeout(function () {
+        callback(false);
+      }, 10);
+    }).then(function () {
+      ret = 123456;
+      this.done();
+    }).end(function (err) {
+      assert.equal(err, null);
+      assert.equal(ret, null);
+      done();
+    });
+  });
+
   it('if - else - 1', function (done) {
     var ret = null;
     _.if(true).then(function () {
