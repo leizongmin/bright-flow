@@ -37,7 +37,8 @@ describe('#for', function () {
         this.done();
       }
     }).end(function (err) {
-      assert.equal(err, null);
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.BREAK);
       assert.deepEqual(data, [0,1,2,3,4,5]);
       done();
     });
