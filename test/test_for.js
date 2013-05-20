@@ -42,6 +42,24 @@ describe('#for', function () {
       done();
     });
   });
+
+  it('async condition', function (done) {
+    var i = 0;
+    var data = [];
+    _.for(function (callback) {
+      setTimeout(function () {
+        callback(i < 10);
+      }, 10);
+    }).do(function () {
+      data.push(i);
+      i++;
+      this.done();
+    }).end(function (err) {
+      assert.equal(err, null);
+      assert.deepEqual(data, [0,1,2,3,4,5,6,7,8,9]);
+      done();
+    });
+  });
   
   it('timeout', function (done) {
     _.for(function () {
