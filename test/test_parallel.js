@@ -146,4 +146,14 @@ describe('#parallel', function () {
     });
   });
 
+  it('done & done(err)', function (done) {
+    var err = new Error('Wahaha');
+    _.parallel().do(function (done) {
+      done(err);
+    }).end(function (err2) {
+      assert.equal(err, err2);
+      done();
+    })
+  });
+
 })

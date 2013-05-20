@@ -60,4 +60,16 @@ describe('#for', function () {
     });
   });
 
+  it('done & done(err)', function (done) {
+    var err = new Error('Wahaha');
+    _.for(function () {
+      return true;
+    }).do(function (done) {
+      done(err);
+    }).end(function (err2) {
+      assert.equal(err, err2);
+      done();
+    })
+  });
+
 })

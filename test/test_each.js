@@ -49,9 +49,7 @@ describe('#each', function () {
   });
   
   it('timeout', function (done) {
-    _.each([1,2,3,4,5,6,7,8,9,10], function () {
-      return true;
-    }).do(function () {
+    _.each([1,2,3,4,5,6,7,8,9,10]).do(function () {
       var me = this;
       setTimeout(function () {
         if (!me._returned) {
@@ -64,4 +62,15 @@ describe('#each', function () {
       done();
     });
   });
+
+  it('done & done(err)', function (done) {
+    var err = new Error('Wahaha');
+    _.each([1,2,3,4,5]).do(function (v, i, arr, done) {
+      done(err);
+    }).end(function (err2) {
+      assert.equal(err, err2);
+      done();
+    })
+  });
+
 })
