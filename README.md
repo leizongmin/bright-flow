@@ -12,92 +12,212 @@ JavaScript异步流程控制库
 npm install bright-flow
 ```
 
-使用方法
+
+使用
 ========
 
-```javascript
-var _ = require('birght-flow');
-
-// 条件判断
-_.if(a > b).then(function () {
-  console.log('a > b');
-  // 执行this.done()表示已处理完毕
-  this.done();
-}).elseif(a < b).then(function () {
-  var me = this;
-  console.log('a < b');
-  setTimeout(function () {
-    me.done();
-  }, 1000);
-}).else(function () {
-  console.log('wrong');
-  this.done();
-}).end(function () {
-  console.log('end if');
-});
-
-// 循环
-var i = 0;
-_.for(function () {
-  return i < 100;
-}).do(function () {
-  console.log(i);
-  // 执行this.break()提前结束循环
-  if (i > 50) return this.break();
-  i++;
-  // 执行this.done()表示本次循环已处理完毕
-  this.done();
-}).end(function () {
-  console.log('end for');
-});
-
-// 遍历
-_.each([1,2,3,4,5]).do(function (v, i, arr) {
-  console.log(v, i);
-  // 也具有 this.done() 和 this.break()
-  this.done();
-}).end(function () {
-  console.log('end for each');
-});
-
-// 并行
-_.parallel().do(function () {
-  console.log('1');
-  // 也具有 this.done() 和 this.break()
-  this.done();
-}).do(function () {
-  console.log('2');
-  this.done();
-}).do(function () {
-  console.log('3');
-  this.done();
-}).timeout(1000).end(function (isTimeout) {
-  // timeout()用于设置超时时间，当省略时表示不限制时间
-  // timeout()必须在end()之前
-  // 当任务超时返回，则isTimeout=true
-  if (isTimeout) console.log('task timeout');
-  console.log('end parallel task');
-});
-
-// 串行
-_.series().do(function () {
-  console.log('1');
-  // 也具有 this.done() 和 this.break()
-  this.done();
-}).do(function () {
-  console.log('2');
-  this.done();
-}).do(function () {
-  console.log('3');
-  this.done();
-}).timeout(1000).end(function (isTimeout) {
-  // timeout()用于设置超时时间，当省略时表示不限制时间
-  // timeout()必须在end()之前
-  if (isTimeout) console.log('task timeout');
-  console.log('end series task');
-});
+### 条件判断
 
 ```
+var _ = require('bright-flow');
+
+_.if(1 + 1 === 2).then(function (done) {
+  console.log('do something...');
+  done();
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+
+_.if(1 > 2).then(function (done) {
+  console.log('it is wrong!');
+  done();
+}).else(function (done) {
+  console.log('do something...');
+  done();
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+
+_.if(1 > 2).then(function (done) {
+  console.log('it is wrong!');
+  done();
+}).elseif(2 > 3).then(function (done) {
+  console.log('it is wrong!');
+  done();
+}).elseif(2 > 4).then(function (done) {
+  console.log('it is wrong!');
+  done();
+}).else(function (done) {
+  console.log('do something...');
+  done();
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+说明：条件可以为函数，比如： `_.if(function () { return true; })` 或者是异步回调的函数：
+
+```
+_.if(function (callback) {
+  callback(true);
+}).then(function (done) {
+  console.log('do something...');
+  done();
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+### 条件循环
+
+```
+var _ = require('bright-flow');
+
+var i = 0;
+_.for(function () {
+  return i < 10;
+}).do(function (done) {
+  setTimeout(function () {
+    console.log('i=%d', i);
+    i++;
+    done();
+  }, 500);
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+说明：条件可以为异步回调方式，如： `_.for(function (callback) { callback(true); })`
+
+### 遍历数组或对象
+
+```
+var _ = require('bright-flow');
+
+_.each([123, 234, 345, 456, 567]).do(function (item, index, list, done) {
+  setTimeout(function () {
+    console.log('index=%d, value=%s', index, item);
+    done();
+  }, 500);
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+
+_.each({a: 123, b: 456, c: 789, d: 910}).do(function (item, key, list, done) {
+  setTimeout(function () {
+    console.log('key=%s, value=%s', key, item);
+    done();
+  }, 500);
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+### 顺序执行
+
+```
+var _ = require('bright-flow');
+
+_.series().do(function (done) {
+  setTimeout(function () {
+    console.log('one');
+    done();
+  }, 500);
+}).do(function (done) {
+  setTimeout(function () {
+    console.log('two');
+    done();
+  }, 500);
+}).do(function (done) {
+  setTimeout(function () {
+    console.log('tree');
+    done();
+  }, 500);
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+### 并发执行
+
+```
+var _ = require('bright-flow');
+
+_.parallel().do(function (done) {
+  setTimeout(function () {
+    console.log('one');
+    done();
+  }, Math.random() * 1000);
+}).do(function (done) {
+  setTimeout(function () {
+    console.log('two');
+    done();
+  }, Math.random() * 1000);
+}).do(function (done) {
+  setTimeout(function () {
+    console.log('tree');
+    done();
+  }, Math.random() * 1000);
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+### 出错处理
+
+1、通过 `done(err)` 来返回出错信息，并中断异步执行：
+
+```
+var _ = require('bright-flow');
+
+_.series().do(function (done) {
+  done(new Error('Unknown error, just for test.'))
+}).do(function (done) {
+  console.log('here will not run');
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+2、通过 `this.break()` 来中断异步执行：
+
+```
+var _ = require('bright-flow');
+
+_.series().do(function (done) {
+  this.break();
+}).do(function (done) {
+  console.log('here will not run');
+}).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
+### 超时处理
+
+在执行 `.end()` 前，通过 `.timeout()` 来设置超时时间（单位为毫秒），若在指定时间
+还没有处理完毕，则不等待异步任务结束而直接返回，并设置参数err
+
+```
+_.series().do(function (done) {
+  // do nothing
+}).timeout(1000).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
 
 授权
 ==========
