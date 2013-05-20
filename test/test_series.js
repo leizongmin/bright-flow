@@ -40,7 +40,7 @@ describe('#series', function () {
     }).end(function (err) {
       assert.equal(err, null);
       assert.deepEqual(data, [1,2,3]);
-      assert.ok(Date.now() - timestamp > 300)
+      assert.ok(Date.now() - timestamp >= 300)
       done();
     });
   });
