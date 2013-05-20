@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Series - The bright-flow API</title>
+    <title>BaseFlow - The bright-flow API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -41,15 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Each.html">Each</a></li>
+                <li><a href="../classes/BaseFlow.html">BaseFlow</a></li>
             
-                <li><a href="../classes/For.html">For</a></li>
+                <li><a href="../classes/BrightFlowError.html">BrightFlowError</a></li>
             
-                <li><a href="../classes/If.html">If</a></li>
+                <li><a href="../classes/EachFlow.html">EachFlow</a></li>
             
-                <li><a href="../classes/Parallel.html">Parallel</a></li>
+                <li><a href="../classes/ForFlow.html">ForFlow</a></li>
             
-                <li><a href="../classes/Series.html">Series</a></li>
+                <li><a href="../classes/IfFlow.html">IfFlow</a></li>
+            
+                <li><a href="../classes/ParallelFlow.html">ParallelFlow</a></li>
+            
+                <li><a href="../classes/SeriesFlow.html">SeriesFlow</a></li>
             
             </ul>
 
@@ -92,7 +96,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Series Class</h1>
+                        <h1>BaseFlow Class</h1>
 <div class="box meta">
     
 
@@ -100,7 +104,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/lib_series.js.html#l9"><code>lib\series.js:9</code></a>
+            Defined in: <a href="../files/lib_flow.js.html#l30"><code>lib\flow.js:30</code></a>
         </div>
     
 
@@ -116,7 +120,7 @@
 
 
 <div class="box intro">
-    <p>series 流程控制对象</p>
+    <p>基本流程控制对象</p>
 </div>
 
 
@@ -144,14 +148,42 @@
                     <ul class="index-list methods">
                         
                             <li class="index-item method">
-                                <a href="#method_do">do</a>
+                                <a href="#method__assert">_assert</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_end">end</a>
+                                <a href="#method__return">_return</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method__start">_start</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_break">break</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_dervie">dervie</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_destroy">destroy</a>
 
                                 
                                 
@@ -180,27 +212,13 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_do" class="method item">
-    <h3 class="name"><code>do</code></h3>
+                    <div id="method__assert" class="method item">
+    <h3 class="name"><code>_assert</code></h3>
 
     
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>fn</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
+        <span class="paren">()</span>
     
 
-    
-        <span class="returns-inline">
-            <span class="type">Object</span>
-        </span>
     
 
     
@@ -226,7 +244,7 @@
             
         
         
-        <a href="../files/lib_series.js.html#l33"><code>lib\series.js:33</code></a>
+        <a href="../files/lib_flow.js.html#l75"><code>lib\flow.js:75</code></a>
         
         </p>
 
@@ -237,7 +255,71 @@
     </div>
 
     <div class="description">
-        <p>do</p>
+        <p>判断是否出错</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method__return" class="method item">
+    <h3 class="name"><code>_return</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>err</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_flow.js.html#l86"><code>lib\flow.js:86</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>调用回调函数</p>
     </div>
 
     
@@ -248,8 +330,8 @@
             
                 <li class="param">
                     
-                        <code class="param-name">fn</code>
-                        <span class="type">Function</span>
+                        <code class="param-name">err</code>
+                        <span class="type">Object</span>
                     
 
                     
@@ -266,29 +348,23 @@
     
 
     
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Object</span>:
-                    
-                
-            </div>
-        </div>
-    
 
     
 </div>
 
                 
-                    <div id="method_end" class="method item">
-    <h3 class="name"><code>end</code></h3>
+                    <div id="method__start" class="method item">
+    <h3 class="name"><code>_start</code></h3>
 
     
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>init</code>
+                    
+                </li>
             
                 <li class="arg">
                     
@@ -325,7 +401,7 @@
             
         
         
-        <a href="../files/lib_series.js.html#l57"><code>lib\series.js:57</code></a>
+        <a href="../files/lib_flow.js.html#l117"><code>lib\flow.js:117</code></a>
         
         </p>
 
@@ -336,7 +412,7 @@
     </div>
 
     <div class="description">
-        <p>end</p>
+        <p>开始</p>
     </div>
 
     
@@ -344,6 +420,21 @@
             <h4>Parameters:</h4>
 
             <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">init</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
             
                 <li class="param">
                     
@@ -362,6 +453,172 @@
             
             </ul>
         </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_break" class="method item">
+    <h3 class="name"><code>break</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_flow.js.html#l66"><code>lib\flow.js:66</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>中断</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_dervie" class="method item">
+    <h3 class="name"><code>dervie</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_flow.js.html#l13"><code>lib\flow.js:13</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>派生</p>
+
+<p>子类必须实现 <em>done, end 这两个方法
+在初始化时，调用 this.</em>super() 来初始化
+this._data 用于保存用户数据，在流程被销毁时会自动清空</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_destroy" class="method item">
+    <h3 class="name"><code>destroy</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_flow.js.html#l108"><code>lib\flow.js:108</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>释放资源</p>
+    </div>
+
     
 
     
@@ -416,7 +673,7 @@
             
         
         
-        <a href="../files/lib_series.js.html#l45"><code>lib\series.js:45</code></a>
+        <a href="../files/lib_flow.js.html#l54"><code>lib\flow.js:54</code></a>
         
         </p>
 
@@ -427,7 +684,7 @@
     </div>
 
     <div class="description">
-        <p>timeout</p>
+        <p>超时</p>
     </div>
 
     

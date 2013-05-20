@@ -41,15 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Each.html">Each</a></li>
+                <li><a href="../classes/BaseFlow.html">BaseFlow</a></li>
             
-                <li><a href="../classes/For.html">For</a></li>
+                <li><a href="../classes/BrightFlowError.html">BrightFlowError</a></li>
             
-                <li><a href="../classes/If.html">If</a></li>
+                <li><a href="../classes/EachFlow.html">EachFlow</a></li>
             
-                <li><a href="../classes/Parallel.html">Parallel</a></li>
+                <li><a href="../classes/ForFlow.html">ForFlow</a></li>
             
-                <li><a href="../classes/Series.html">Series</a></li>
+                <li><a href="../classes/IfFlow.html">IfFlow</a></li>
+            
+                <li><a href="../classes/ParallelFlow.html">ParallelFlow</a></li>
+            
+                <li><a href="../classes/SeriesFlow.html">SeriesFlow</a></li>
             
             </ul>
 
@@ -116,8 +120,8 @@ describe(&#x27;#series&#x27;, function () {
     }).do(function () {
       data.push(3);
       this.done();
-    }).end(function (isTimeout) {
-      assert.notEqual(isTimeout, true);
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, [1,2,3]);
       done();
     });
@@ -135,10 +139,10 @@ describe(&#x27;#series&#x27;, function () {
     }).do(function () {
       data.push(3);
       setTimeout(this.done.bind(this), 100);
-    }).end(function (isTimeout) {
-      assert.notEqual(isTimeout, true);
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, [1,2,3]);
-      assert.ok(Date.now() - timestamp &gt; 300)
+      assert.ok(Date.now() - timestamp &gt;= 300)
       done();
     });
   });
@@ -154,8 +158,9 @@ describe(&#x27;#series&#x27;, function () {
     }).do(function () {
       data.push(3);
       this.done();
-    }).end(function (isTimeout) {
-      assert.notEqual(isTimeout, true);
+    }).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.BREAK);
       assert.deepEqual(data, [1,2]);
       done();
     });
@@ -171,8 +176,9 @@ describe(&#x27;#series&#x27;, function () {
       this.done();
     }).do(function () {
       data.push(3);
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, true);
+    }).timeout(100).end(function (err) {
+      assert.notEqual(err, null)
+      assert.equal(err.code, _.BrightFlowError.TIMEOUT);
       assert.deepEqual(data, [1,2,3]);
       done();
     });
@@ -187,11 +193,34 @@ describe(&#x27;#series&#x27;, function () {
       data.push(2);
     }).do(function () {
       data.push(3);
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, true);
+    }).timeout(100).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.TIMEOUT);
       assert.deepEqual(data, [1,2]);
       done();
     });
+  });
+
+  it(&#x27;#error&#x27;, function (done) {
+    var reterr = new Error(&#x27;Test&#x27;);
+    _.series().do(function () {
+      this.done(reterr);
+    }).do(function () {
+      throw new Error(&#x27;Do not run here&#x27;);
+    }).end(function (err) {
+      assert.equal(err, reterr);
+      done();
+    })
+  });
+
+  it(&#x27;done &amp; done(err)&#x27;, function (done) {
+    var err = new Error(&#x27;Wahaha&#x27;);
+    _.series().do(function (done) {
+      done(err);
+    }).end(function (err2) {
+      assert.equal(err, err2);
+      done();
+    })
   });
 
 })

@@ -41,15 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Each.html">Each</a></li>
+                <li><a href="../classes/BaseFlow.html">BaseFlow</a></li>
             
-                <li><a href="../classes/For.html">For</a></li>
+                <li><a href="../classes/BrightFlowError.html">BrightFlowError</a></li>
             
-                <li><a href="../classes/If.html">If</a></li>
+                <li><a href="../classes/EachFlow.html">EachFlow</a></li>
             
-                <li><a href="../classes/Parallel.html">Parallel</a></li>
+                <li><a href="../classes/ForFlow.html">ForFlow</a></li>
             
-                <li><a href="../classes/Series.html">Series</a></li>
+                <li><a href="../classes/IfFlow.html">IfFlow</a></li>
+            
+                <li><a href="../classes/ParallelFlow.html">ParallelFlow</a></li>
+            
+                <li><a href="../classes/SeriesFlow.html">SeriesFlow</a></li>
             
             </ul>
 
@@ -97,36 +101,30 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * bright-flow
+ * ParallelFlow
  *
  * @module bright-flow
  * @author 老雷&lt;leizongmin@gmail.com&gt;
  */
 
+var BaseFlow = require(&#x27;./flow&#x27;);
+
+exports = module.exports = ParallelFlow;
 
 /**
- * parallel 流程控制对象
+ * ParallelFlow 流程控制对象
  *
- * @class Parallel
+ * @class ParallelFlow
  * @return {Object}
  */
-var flow = function () {
-  if (!(this instanceof flow)) return new flow();
-  this._fn = [];
+function ParallelFlow () {
+  if (!(this instanceof ParallelFlow)) return new ParallelFlow();
+  this._super();
+  this._data.fn = [];
 };
 
-/**
- * 执行函数
- *
- * @param {Function} fn
- * @param {Array} args
- * @return {Object}
- */
-flow.prototype._call = function (fn, args) {
-  args = args || [];
-  args.push(this);
-  return fn.apply(this, args);
-};
+// 继承
+BaseFlow.derive(ParallelFlow);
 
 /**
  * do
@@ -135,21 +133,26 @@ flow.prototype._call = function (fn, args) {
  * @param {Function} fn
  * @return {Object}
  */
-flow.prototype.do = function (fn) {
-  this._fn.push(fn);
+ParallelFlow.prototype.do = function (fn) {
+  this._data.fn.push(fn);
   return this;
 };
 
 /**
- * timeout
+ * 完成一个步骤
  *
- * @method timeout
- * @param {Integer} ms
- * @return {Object}
+ * @method done
+ * @param {Object} err
  */
-flow.prototype.timeout = function (ms) {
-  this._timeout = ms;
-  return this;
+ParallelFlow.prototype._done = function (err) {
+  if (this._ignoreAll) return;
+  this._assert();
+  if (err) return this._return(err);
+  
+  this._doneCount++;
+  if (this._doneCount &gt;= this._taskCount) {
+    this._return();
+  }
 };
 
 /**
@@ -158,49 +161,25 @@ flow.prototype.timeout = function (ms) {
  * @method end
  * @param {Function} callback
  */
-flow.prototype.end = function (callback) {
+ParallelFlow.prototype.end = function (callback) {
   var me = this;
-  var tid = null;
-  var hasReturn = false;
-  var doneCount = 0;
-  var taskCount = me._fn.length;
 
-  me.done = function () {
-    if (hasReturn) return;
-    doneCount++;
-    if (doneCount &gt;= taskCount) {
-      me.break();
-    }
-  };
+  this._doneCount = 0;
+  this._taskCount = this._data.fn.length;
 
-  me.break = function () {
-    if (hasReturn) return;
-    hasReturn = true;
-    if (tid) clearTimeout(tid);
-    me._fn = null;
-    callback(!!me.isTimeout);
-  };
-
-  if (me._timeout &gt; 0) {
-    tid = setTimeout(function () {
-      me.isTimeout = true;
-      me.break();
-    }, me._timeout);
-  }
-
-  for (var i = 0; i &lt; taskCount; i++) {
-    (function (fn) {
+  this._start(function () {
+    me._data.fn.forEach(function (fn) {
       process.nextTick(function () {
         me._call(fn, [me.done]);
       });
-    })(me._fn.shift());
-  }
+    });
+  }, function (err) {
+    if (err) me._ignoreAll = true;
+    callback(err);
+  });
 
   return this;
 };
-
-
-module.exports = exports = flow;
 
     </pre>
 </div>

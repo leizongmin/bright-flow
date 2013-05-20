@@ -19,7 +19,25 @@
                 "bright-flow": 1
             },
             "classes": {
-                "Each": 1
+                "EachFlow": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib\\error.js": {
+            "name": "lib\\error.js",
+            "modules": {},
+            "classes": {
+                "BrightFlowError": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "lib\\flow.js": {
+            "name": "lib\\flow.js",
+            "modules": {},
+            "classes": {
+                "BaseFlow": 1
             },
             "fors": {},
             "namespaces": {}
@@ -28,7 +46,7 @@
             "name": "lib\\for.js",
             "modules": {},
             "classes": {
-                "For": 1
+                "ForFlow": 1
             },
             "fors": {},
             "namespaces": {}
@@ -37,7 +55,7 @@
             "name": "lib\\if.js",
             "modules": {},
             "classes": {
-                "If": 1
+                "IfFlow": 1
             },
             "fors": {},
             "namespaces": {}
@@ -53,7 +71,7 @@
             "name": "lib\\parallel.js",
             "modules": {},
             "classes": {
-                "Parallel": 1
+                "ParallelFlow": 1
             },
             "fors": {},
             "namespaces": {}
@@ -62,7 +80,7 @@
             "name": "lib\\series.js",
             "modules": {},
             "classes": {
-                "Series": 1
+                "SeriesFlow": 1
             },
             "fors": {},
             "namespaces": {}
@@ -108,25 +126,27 @@
             "name": "bright-flow",
             "submodules": {},
             "classes": {
-                "Each": 1,
-                "For": 1,
-                "If": 1,
-                "Parallel": 1,
-                "Series": 1
+                "EachFlow": 1,
+                "BrightFlowError": 1,
+                "BaseFlow": 1,
+                "ForFlow": 1,
+                "IfFlow": 1,
+                "ParallelFlow": 1,
+                "SeriesFlow": 1
             },
             "fors": {},
             "namespaces": {},
             "tag": "module",
             "file": "lib\\series.js",
-            "line": 9,
-            "description": "bright-flow",
+            "line": 12,
+            "description": "EachFlow",
             "author": "老雷<leizongmin@gmail.com>"
         }
     },
     "classes": {
-        "Each": {
-            "name": "Each",
-            "shortname": "Each",
+        "EachFlow": {
+            "name": "EachFlow",
+            "shortname": "EachFlow",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -135,8 +155,8 @@
             "module": "bright-flow",
             "namespace": "",
             "file": "lib\\each.js",
-            "line": 9,
-            "description": "each 流程控制对象",
+            "line": 12,
+            "description": "EachFlow 流程控制对象",
             "params": [
                 {
                     "name": "arr",
@@ -149,9 +169,54 @@
                 "type": "Object"
             }
         },
-        "For": {
-            "name": "For",
-            "shortname": "For",
+        "BrightFlowError": {
+            "name": "BrightFlowError",
+            "shortname": "BrightFlowError",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "bright-flow",
+            "namespace": "",
+            "file": "lib\\error.js",
+            "line": 20,
+            "description": "创建一个Error对象",
+            "params": [
+                {
+                    "name": "code",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "message",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "stackStartFunction",
+                    "description": "",
+                    "type": "Function"
+                }
+            ]
+        },
+        "BaseFlow": {
+            "name": "BaseFlow",
+            "shortname": "BaseFlow",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "bright-flow",
+            "namespace": "",
+            "file": "lib\\flow.js",
+            "line": 30,
+            "description": "基本流程控制对象"
+        },
+        "ForFlow": {
+            "name": "ForFlow",
+            "shortname": "ForFlow",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -160,12 +225,12 @@
             "module": "bright-flow",
             "namespace": "",
             "file": "lib\\for.js",
-            "line": 9,
-            "description": "for 流程控制对象",
+            "line": 13,
+            "description": "ForFlow 流程控制对象",
             "params": [
                 {
                     "name": "cond",
-                    "description": "",
+                    "description": "可以为同步返回或异步：\n                         function () { return true; }\n                         function (callback) { callback(true); }",
                     "type": "Function"
                 }
             ],
@@ -174,9 +239,9 @@
                 "type": "Object"
             }
         },
-        "If": {
-            "name": "If",
-            "shortname": "If",
+        "IfFlow": {
+            "name": "IfFlow",
+            "shortname": "IfFlow",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -185,7 +250,7 @@
             "module": "bright-flow",
             "namespace": "",
             "file": "lib\\if.js",
-            "line": 9,
+            "line": 12,
             "description": "if 流程控制对象",
             "params": [
                 {
@@ -199,9 +264,9 @@
                 "type": "Object"
             }
         },
-        "Parallel": {
-            "name": "Parallel",
-            "shortname": "Parallel",
+        "ParallelFlow": {
+            "name": "ParallelFlow",
+            "shortname": "ParallelFlow",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -210,16 +275,16 @@
             "module": "bright-flow",
             "namespace": "",
             "file": "lib\\parallel.js",
-            "line": 9,
-            "description": "parallel 流程控制对象",
+            "line": 12,
+            "description": "ParallelFlow 流程控制对象",
             "return": {
                 "description": "",
                 "type": "Object"
             }
         },
-        "Series": {
-            "name": "Series",
-            "shortname": "Series",
+        "SeriesFlow": {
+            "name": "SeriesFlow",
+            "shortname": "SeriesFlow",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -228,8 +293,8 @@
             "module": "bright-flow",
             "namespace": "",
             "file": "lib\\series.js",
-            "line": 9,
-            "description": "series 流程控制对象",
+            "line": 12,
+            "description": "SeriesFlow 流程控制对象",
             "return": {
                 "description": "",
                 "type": "Object"
@@ -241,34 +306,11 @@
             "file": "example\\tree.js",
             "line": 1,
             "description": "列出目录下的所有文件",
-            "class": "Each"
+            "class": "EachFlow"
         },
         {
             "file": "lib\\each.js",
-            "line": 21,
-            "description": "执行函数",
-            "params": [
-                {
-                    "name": "fn",
-                    "description": "",
-                    "type": "Function"
-                },
-                {
-                    "name": "args",
-                    "description": "",
-                    "type": "Array"
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "Each",
-            "module": "bright-flow"
-        },
-        {
-            "file": "lib\\each.js",
-            "line": 34,
+            "line": 42,
             "description": "do",
             "itemtype": "method",
             "name": "do",
@@ -283,32 +325,28 @@
                 "description": "",
                 "type": "Object"
             },
-            "class": "Each",
+            "class": "EachFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\each.js",
-            "line": 46,
-            "description": "timeout",
+            "line": 54,
+            "description": "完成一个步骤",
             "itemtype": "method",
-            "name": "timeout",
+            "name": "done",
             "params": [
                 {
-                    "name": "ms",
+                    "name": "err",
                     "description": "",
-                    "type": "Integer"
+                    "type": "Object"
                 }
             ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "Each",
+            "class": "EachFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\each.js",
-            "line": 58,
+            "line": 74,
             "description": "end",
             "itemtype": "method",
             "name": "end",
@@ -319,12 +357,64 @@
                     "type": "Function"
                 }
             ],
-            "class": "Each",
+            "class": "EachFlow",
             "module": "bright-flow"
         },
         {
-            "file": "lib\\for.js",
-            "line": 21,
+            "file": "lib\\error.js",
+            "line": 10,
+            "description": "首字母大写",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "BrightFlowError",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\error.js",
+            "line": 39,
+            "description": "TIMEOUT",
+            "type": "String",
+            "class": "BrightFlowError",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\error.js",
+            "line": 45,
+            "description": "BREAK",
+            "type": "String",
+            "class": "BrightFlowError",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\error.js",
+            "line": 51,
+            "description": "MULTI_TIMES",
+            "type": "String",
+            "class": "BrightFlowError",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 13,
+            "description": "派生\n\n子类必须实现 _done, end 这两个方法\n在初始化时，调用 this._super() 来初始化\nthis._data 用于保存用户数据，在流程被销毁时会自动清空",
+            "itemtype": "method",
+            "name": "dervie",
+            "params": [],
+            "class": "BaseFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 41,
             "description": "执行函数",
             "params": [
                 {
@@ -342,12 +432,96 @@
                 "description": "",
                 "type": "Object"
             },
-            "class": "For",
+            "class": "BaseFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 54,
+            "description": "超时",
+            "itemtype": "method",
+            "name": "timeout",
+            "params": [
+                {
+                    "name": "ms",
+                    "description": "",
+                    "type": "Integer"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "class": "BaseFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 66,
+            "description": "中断",
+            "itemtype": "method",
+            "name": "break",
+            "class": "BaseFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 75,
+            "description": "判断是否出错",
+            "itemtype": "method",
+            "name": "_assert",
+            "class": "BaseFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 86,
+            "description": "调用回调函数",
+            "itemtype": "method",
+            "name": "_return",
+            "params": [
+                {
+                    "name": "err",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "BaseFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 108,
+            "description": "释放资源",
+            "itemtype": "method",
+            "name": "destroy",
+            "class": "BaseFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\flow.js",
+            "line": 117,
+            "description": "开始",
+            "itemtype": "method",
+            "name": "_start",
+            "params": [
+                {
+                    "name": "init",
+                    "description": "",
+                    "type": "Function"
+                },
+                {
+                    "name": "callback",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "BaseFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\for.js",
-            "line": 34,
+            "line": 40,
             "description": "do",
             "itemtype": "method",
             "name": "do",
@@ -362,32 +536,42 @@
                 "description": "",
                 "type": "Object"
             },
-            "class": "For",
+            "class": "ForFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\for.js",
-            "line": 46,
-            "description": "timeout",
+            "line": 52,
+            "description": "完成一个步骤",
             "itemtype": "method",
-            "name": "timeout",
+            "name": "done",
             "params": [
                 {
-                    "name": "ms",
+                    "name": "err",
                     "description": "",
-                    "type": "Integer"
+                    "type": "Object"
                 }
             ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "For",
+            "class": "ForFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\for.js",
-            "line": 58,
+            "line": 65,
+            "description": "测试条件",
+            "params": [
+                {
+                    "name": "ok",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "ForFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\for.js",
+            "line": 78,
             "description": "end",
             "itemtype": "method",
             "name": "end",
@@ -398,35 +582,30 @@
                     "type": "Function"
                 }
             ],
-            "class": "For",
+            "class": "ForFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\if.js",
-            "line": 22,
-            "description": "执行函数",
+            "line": 30,
+            "description": "格式化测试条件",
             "params": [
                 {
-                    "name": "fn",
-                    "description": "",
-                    "type": "Function"
-                },
-                {
-                    "name": "args",
-                    "description": "",
-                    "type": "Array"
+                    "name": "cond",
+                    "description": "可以为布尔值、同步或异步函数：\n                           true\n                           function () { return true; }\n                           function (callback) { callback(true); }",
+                    "type": "Boolean|Function"
                 }
             ],
             "return": {
                 "description": "",
-                "type": "Object"
+                "type": "Function"
             },
-            "class": "If",
+            "class": "IfFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\if.js",
-            "line": 35,
+            "line": 55,
             "description": "then",
             "itemtype": "method",
             "name": "then",
@@ -441,12 +620,12 @@
                 "description": "",
                 "type": "Object"
             },
-            "class": "If",
+            "class": "IfFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\if.js",
-            "line": 47,
+            "line": 67,
             "description": "elseif",
             "itemtype": "method",
             "name": "elseif",
@@ -454,19 +633,19 @@
                 {
                     "name": "cond",
                     "description": "",
-                    "type": "Boolean"
+                    "type": "Boolean|Function"
                 }
             ],
             "return": {
                 "description": "",
                 "type": "Object"
             },
-            "class": "If",
+            "class": "IfFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\if.js",
-            "line": 59,
+            "line": 79,
             "description": "else",
             "itemtype": "method",
             "name": "else",
@@ -481,32 +660,42 @@
                 "description": "",
                 "type": "Object"
             },
-            "class": "If",
+            "class": "IfFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\if.js",
-            "line": 71,
-            "description": "timeout",
+            "line": 91,
+            "description": "完成一个步骤",
             "itemtype": "method",
-            "name": "timeout",
+            "name": "done",
             "params": [
                 {
-                    "name": "ms",
+                    "name": "err",
                     "description": "",
-                    "type": "Integer"
+                    "type": "Object"
                 }
             ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "If",
+            "class": "IfFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\if.js",
-            "line": 83,
+            "line": 144,
+            "description": "测试条件",
+            "params": [
+                {
+                    "name": "ok",
+                    "description": "",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "IfFlow",
+            "module": "bright-flow"
+        },
+        {
+            "file": "lib\\if.js",
+            "line": 163,
             "description": "end",
             "itemtype": "method",
             "name": "end",
@@ -517,7 +706,7 @@
                     "type": "Function"
                 }
             ],
-            "class": "If",
+            "class": "IfFlow",
             "module": "bright-flow"
         },
         {
@@ -525,35 +714,12 @@
             "line": 1,
             "description": "bright-flow",
             "author": "老雷<leizongmin@gmail.com>",
-            "class": "Parallel",
+            "class": "ParallelFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\parallel.js",
-            "line": 20,
-            "description": "执行函数",
-            "params": [
-                {
-                    "name": "fn",
-                    "description": "",
-                    "type": "Function"
-                },
-                {
-                    "name": "args",
-                    "description": "",
-                    "type": "Array"
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "Parallel",
-            "module": "bright-flow"
-        },
-        {
-            "file": "lib\\parallel.js",
-            "line": 33,
+            "line": 27,
             "description": "do",
             "itemtype": "method",
             "name": "do",
@@ -568,32 +734,28 @@
                 "description": "",
                 "type": "Object"
             },
-            "class": "Parallel",
+            "class": "ParallelFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\parallel.js",
-            "line": 45,
-            "description": "timeout",
+            "line": 39,
+            "description": "完成一个步骤",
             "itemtype": "method",
-            "name": "timeout",
+            "name": "done",
             "params": [
                 {
-                    "name": "ms",
+                    "name": "err",
                     "description": "",
-                    "type": "Integer"
+                    "type": "Object"
                 }
             ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "Parallel",
+            "class": "ParallelFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\parallel.js",
-            "line": 57,
+            "line": 56,
             "description": "end",
             "itemtype": "method",
             "name": "end",
@@ -604,35 +766,12 @@
                     "type": "Function"
                 }
             ],
-            "class": "Parallel",
+            "class": "ParallelFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\series.js",
-            "line": 20,
-            "description": "执行函数",
-            "params": [
-                {
-                    "name": "fn",
-                    "description": "",
-                    "type": "Function"
-                },
-                {
-                    "name": "args",
-                    "description": "",
-                    "type": "Array"
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "Series",
-            "module": "bright-flow"
-        },
-        {
-            "file": "lib\\series.js",
-            "line": 33,
+            "line": 27,
             "description": "do",
             "itemtype": "method",
             "name": "do",
@@ -647,32 +786,28 @@
                 "description": "",
                 "type": "Object"
             },
-            "class": "Series",
+            "class": "SeriesFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\series.js",
-            "line": 45,
-            "description": "timeout",
+            "line": 39,
+            "description": "完成一个步骤",
             "itemtype": "method",
-            "name": "timeout",
+            "name": "done",
             "params": [
                 {
-                    "name": "ms",
+                    "name": "err",
                     "description": "",
-                    "type": "Integer"
+                    "type": "Object"
                 }
             ],
-            "return": {
-                "description": "",
-                "type": "Object"
-            },
-            "class": "Series",
+            "class": "SeriesFlow",
             "module": "bright-flow"
         },
         {
             "file": "lib\\series.js",
-            "line": 57,
+            "line": 56,
             "description": "end",
             "itemtype": "method",
             "name": "end",
@@ -683,7 +818,7 @@
                     "type": "Function"
                 }
             ],
-            "class": "Series",
+            "class": "SeriesFlow",
             "module": "bright-flow"
         },
         {
@@ -724,32 +859,48 @@
     ],
     "warnings": [
         {
+            "message": "param name/type/descript missing",
+            "line": " lib\\flow.js:13"
+        },
+        {
             "message": "Missing item type\n列出目录下的所有文件",
             "line": " example\\tree.js:1"
         },
         {
-            "message": "Missing item type\n执行函数",
-            "line": " lib\\each.js:21"
+            "message": "Missing item type\n首字母大写",
+            "line": " lib\\error.js:10"
+        },
+        {
+            "message": "Missing item type\nTIMEOUT",
+            "line": " lib\\error.js:39"
+        },
+        {
+            "message": "Missing item type\nBREAK",
+            "line": " lib\\error.js:45"
+        },
+        {
+            "message": "Missing item type\nMULTI_TIMES",
+            "line": " lib\\error.js:51"
         },
         {
             "message": "Missing item type\n执行函数",
-            "line": " lib\\for.js:21"
+            "line": " lib\\flow.js:41"
         },
         {
-            "message": "Missing item type\n执行函数",
-            "line": " lib\\if.js:22"
+            "message": "Missing item type\n测试条件",
+            "line": " lib\\for.js:65"
+        },
+        {
+            "message": "Missing item type\n格式化测试条件",
+            "line": " lib\\if.js:30"
+        },
+        {
+            "message": "Missing item type\n测试条件",
+            "line": " lib\\if.js:144"
         },
         {
             "message": "Missing item type\nbright-flow",
             "line": " lib\\index.js:1"
-        },
-        {
-            "message": "Missing item type\n执行函数",
-            "line": " lib\\parallel.js:20"
-        },
-        {
-            "message": "Missing item type\n执行函数",
-            "line": " lib\\series.js:20"
         },
         {
             "message": "Missing item type\n测试 each",

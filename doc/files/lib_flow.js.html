@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>example\tree.js - The bright-flow API</title>
+    <title>lib\flow.js - The bright-flow API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -96,82 +96,151 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: example\tree.js</h1>
+                        <h1 class="file-heading">File: lib\flow.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * 列出目录下的所有文件
+ * Base Flow Object
+ * 
+ * @module bright-flow
+ * @author 老雷&lt;leizongmin@gmail.com&gt;
  */
 
-var path = require(&#x27;path&#x27;);
-var fs = require(&#x27;fs&#x27;);
-var _ = require(&#x27;../&#x27;);
+var BrightFlowError = require(&#x27;./error&#x27;);
 
-// 要列出的目录
-var dir = path.resolve(process.argv[2]);
 
-// 输出文件名
-// indent:字符串前缀，isLast:是否为该级目录的最后一个文件, str:文件名
-var print = function (indent, isLast, str) {
-  console.log(indent + (isLast ? &#x27;└─ &#x27; : &#x27;├─ &#x27;) + str);
+exports.BaseFlow = BaseFlow;
+
+/**
+ * 派生
+ *
+ * 子类必须实现 _done, end 这两个方法
+ * 在初始化时，调用 this._super() 来初始化
+ * this._data 用于保存用户数据，在流程被销毁时会自动清空
+ *
+ * @method dervie
+ * @param
+ */
+exports.derive = function (c) {
+  for (var i in BaseFlow.prototype) {
+    c.prototype[i] = BaseFlow.prototype[i];
+  }
+  c.prototype._super = BaseFlow;
 };
 
-// 列出指定目录下的所有文件
-// dir:要列出的目录 indent:输出时的字符串前缀, isLast:是否为该级目录的最后一个文件
-// cb:回调函数，第一个参数为该目录及子目录下的文件数量
-var tree = function (dir, indent, isLast, cb) {
-  var indent = indent + (isLast ? &#x27;  &#x27; : &#x27;│ &#x27;);
+/**
+ * 基本流程控制对象
+ *
+ * @class BaseFlow
+ */
+function BaseFlow () {
+  this._returned = false;
+  this.done = this._done.bind(this);
+  this._data = {};
+}
 
-  // 读取本级目录下的所有文件名
-  fs.readdir(dir, function (err, files) {
-    if (err) {
-      print(indent, isLast, err);
-      cb();
-    } else {
-
-      var subTotalFile = 0;
-      var lastIndex = files.length - 1;
-
-      // 开始读取列出该级的所有文件
-      _.each(files).do(function (name, i, list, done) {
-
-        var file = path.resolve(dir, name);
-        var isLast = i &gt;= lastIndex;
-
-        // 取文件属性，如果是目录，则继续列出子目录
-        fs.stat(file, function (err, stats) {
-          if (err) {
-            print(indent, isLast, err);
-            done();
-          } else {
-            // 输出
-            print(indent, isLast, name + (stats.isFile() ? &#x27; [size:&#x27; + stats.size + &#x27;]&#x27; : &#x27;&#x27;));
-
-            if (stats.isDirectory()) {
-              tree(file, indent, isLast, function (total) {
-                if (total &gt; 0) subTotalFile += total;
-                done();
-              });
-            } else {
-              done();
-            }
-          }
-        });
-        
-      }).end(function () {
-        // 回调函数
-        cb(files.length + subTotalFile);
-      });
-    }
-  });
+/**
+ * 执行函数
+ *
+ * @param {Function} fn
+ * @param {Array} args
+ * @return {Object}
+ */
+BaseFlow.prototype._call = function (fn, args) {
+  args = args || [];
+  args.push(this);
+  return fn.apply(this, args);
 };
 
+/**
+ * 超时
+ *
+ * @method timeout
+ * @param {Integer} ms
+ * @return {Object}
+ */
+BaseFlow.prototype.timeout = function (ms) {
+  this._timeout = ms;
+  return this;
+};
 
-var timestamp = Date.now();
-tree(dir, &#x27;&#x27;, true, function (total) {
-  console.log(&#x27;\ntotal %d files, spent %dms&#x27;, total, (Date.now() - timestamp));
-});
+/**
+ * 中断
+ *
+ * @method break
+ */
+BaseFlow.prototype.break = function () {
+  this._return(new BrightFlowError(BrightFlowError.BREAK));  
+};
+
+/**
+ * 判断是否出错
+ *
+ * @method _assert
+ */
+BaseFlow.prototype._assert = function () {
+  if (this._returned) {
+    throw new BrightFlowError(BrightFlowError.MULTI_TIMES, &#x27;callback() has been called&#x27;);
+  }
+};
+
+/**
+ * 调用回调函数
+ *
+ * @method _return
+ * @param {Object} err
+ */
+BaseFlow.prototype._return = function (err) {
+  this._assert();
+  err = err || null;
+
+  // 如果有定时器，则删除
+  if (this._tid) clearTimeout(this._tid);
+
+  var cb = this._data.callback;
+
+  // 回收资源
+  this._returned = true;
+  this.destroy();
+
+  cb(err);
+};
+
+/**
+ * 释放资源
+ *
+ * @method destroy
+ */
+BaseFlow.prototype.destroy = function () {
+  this._data = null;
+};
+
+/**
+ * 开始
+ *
+ * @method _start
+ * @param {Function} init
+ * @param {Function} callback
+ */
+BaseFlow.prototype._start = function (init, callback) {
+  var me = this;
+
+  this._data.callback = callback;
+
+  // 超时处理
+  if (me._timeout &gt; 0) {
+    this._tid = setTimeout(function () {
+      me._return(new BrightFlowError(BrightFlowError.TIMEOUT));
+    }, me._timeout);
+  }
+  
+  // 保证是异步的
+  process.nextTick(init);
+  
+  return this;
+};
+
     </pre>
 </div>
 

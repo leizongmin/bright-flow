@@ -41,15 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Each.html">Each</a></li>
+                <li><a href="../classes/BaseFlow.html">BaseFlow</a></li>
             
-                <li><a href="../classes/For.html">For</a></li>
+                <li><a href="../classes/BrightFlowError.html">BrightFlowError</a></li>
             
-                <li><a href="../classes/If.html">If</a></li>
+                <li><a href="../classes/EachFlow.html">EachFlow</a></li>
             
-                <li><a href="../classes/Parallel.html">Parallel</a></li>
+                <li><a href="../classes/ForFlow.html">ForFlow</a></li>
             
-                <li><a href="../classes/Series.html">Series</a></li>
+                <li><a href="../classes/IfFlow.html">IfFlow</a></li>
+            
+                <li><a href="../classes/ParallelFlow.html">ParallelFlow</a></li>
+            
+                <li><a href="../classes/SeriesFlow.html">SeriesFlow</a></li>
             
             </ul>
 
@@ -97,36 +101,30 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * bright-flow
+ * SeriesFlow
  *
  * @module bright-flow
  * @author 老雷&lt;leizongmin@gmail.com&gt;
  */
 
+var BaseFlow = require(&#x27;./flow&#x27;);
+
+exports = module.exports = SeriesFlow;
 
 /**
- * series 流程控制对象
+ * SeriesFlow 流程控制对象
  *
- * @class Series
+ * @class SeriesFlow
  * @return {Object}
  */
-var flow = function () {
-  if (!(this instanceof flow)) return new flow();
-  this._fn = [];
+function SeriesFlow () {
+  if (!(this instanceof SeriesFlow)) return new SeriesFlow();
+  this._super();
+  this._data.fn = [];
 };
 
-/**
- * 执行函数
- *
- * @param {Function} fn
- * @param {Array} args
- * @return {Object}
- */
-flow.prototype._call = function (fn, args) {
-  args = args || [];
-  args.push(this);
-  return fn.apply(this, args);
-};
+// 继承
+BaseFlow.derive(SeriesFlow);
 
 /**
  * do
@@ -135,21 +133,26 @@ flow.prototype._call = function (fn, args) {
  * @param {Function} fn
  * @return {Object}
  */
-flow.prototype.do = function (fn) {
-  this._fn.push(fn);
+SeriesFlow.prototype.do = function (fn) {
+  this._data.fn.push(fn);
   return this;
 };
 
 /**
- * timeout
+ * 完成一个步骤
  *
- * @method timeout
- * @param {Integer} ms
- * @return {Object}
+ * @method done
+ * @param {Object} err
  */
-flow.prototype.timeout = function (ms) {
-  this._timeout = ms;
-  return this;
+SeriesFlow.prototype._done = function (err) {
+  this._assert();
+  if (err) return this._return(err);
+  
+  if (this._data.fn.length &gt; 0) {
+    this._call(this._data.fn.shift(), [this.done]);
+  } else {
+    this._return();
+  }
 };
 
 /**
@@ -158,44 +161,10 @@ flow.prototype.timeout = function (ms) {
  * @method end
  * @param {Function} callback
  */
-flow.prototype.end = function (callback) {
-  var me = this;
-  var tid = null;
-  var hasReturn = false;
-
-  me.done = function () {
-    if (hasReturn) return;
-    if (me._fn.length &gt; 0) {
-      me._call(me._fn.shift(), [me.done]);
-    } else {
-      me.break();
-    }
-  };
-
-  me.break = function () {
-    if (hasReturn) return;
-    hasReturn = true;
-    if (tid) clearTimeout(tid);
-    me._fn = null;
-    callback(!!me.isTimeout);
-  };
-
-  if (me._timeout &gt; 0) {
-    tid = setTimeout(function () {
-      me.isTimeout = true;
-      me.break();
-    }, me._timeout);
-  }
-  
-  process.nextTick(function () {
-    me.done();
-  });
-  
+SeriesFlow.prototype.end = function (callback) {
+  this._start(this.done, callback);
   return this;
 };
-
-
-module.exports = exports = flow;
 
     </pre>
 </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Parallel - The bright-flow API</title>
+    <title>ParallelFlow - The bright-flow API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -41,15 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Each.html">Each</a></li>
+                <li><a href="../classes/BaseFlow.html">BaseFlow</a></li>
             
-                <li><a href="../classes/For.html">For</a></li>
+                <li><a href="../classes/BrightFlowError.html">BrightFlowError</a></li>
             
-                <li><a href="../classes/If.html">If</a></li>
+                <li><a href="../classes/EachFlow.html">EachFlow</a></li>
             
-                <li><a href="../classes/Parallel.html">Parallel</a></li>
+                <li><a href="../classes/ForFlow.html">ForFlow</a></li>
             
-                <li><a href="../classes/Series.html">Series</a></li>
+                <li><a href="../classes/IfFlow.html">IfFlow</a></li>
+            
+                <li><a href="../classes/ParallelFlow.html">ParallelFlow</a></li>
+            
+                <li><a href="../classes/SeriesFlow.html">SeriesFlow</a></li>
             
             </ul>
 
@@ -92,7 +96,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Parallel Class</h1>
+                        <h1>ParallelFlow Class</h1>
 <div class="box meta">
     
 
@@ -100,7 +104,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/lib_parallel.js.html#l9"><code>lib\parallel.js:9</code></a>
+            Defined in: <a href="../files/lib_parallel.js.html#l12"><code>lib\parallel.js:12</code></a>
         </div>
     
 
@@ -116,7 +120,7 @@
 
 
 <div class="box intro">
-    <p>parallel 流程控制对象</p>
+    <p>ParallelFlow 流程控制对象</p>
 </div>
 
 
@@ -151,14 +155,14 @@
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_end">end</a>
+                                <a href="#method_done">done</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_timeout">timeout</a>
+                                <a href="#method_end">end</a>
 
                                 
                                 
@@ -226,7 +230,7 @@
             
         
         
-        <a href="../files/lib_parallel.js.html#l33"><code>lib\parallel.js:33</code></a>
+        <a href="../files/lib_parallel.js.html#l27"><code>lib\parallel.js:27</code></a>
         
         </p>
 
@@ -283,6 +287,93 @@
 </div>
 
                 
+                    <div id="method_done" class="method item">
+    <h3 class="name"><code>done</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>err</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_parallel.js.html#l39"><code>lib\parallel.js:39</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>完成一个步骤</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">err</code>
+                        <span class="type">Object</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_end" class="method item">
     <h3 class="name"><code>end</code></h3>
 
@@ -325,7 +416,7 @@
             
         
         
-        <a href="../files/lib_parallel.js.html#l57"><code>lib\parallel.js:57</code></a>
+        <a href="../files/lib_parallel.js.html#l56"><code>lib\parallel.js:56</code></a>
         
         </p>
 
@@ -364,109 +455,6 @@
         </div>
     
 
-    
-
-    
-</div>
-
-                
-                    <div id="method_timeout" class="method item">
-    <h3 class="name"><code>timeout</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>ms</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type">Object</span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/lib_parallel.js.html#l45"><code>lib\parallel.js:45</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>timeout</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">ms</code>
-                        <span class="type">Integer</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                         
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type">Object</span>:
-                    
-                
-            </div>
-        </div>
     
 
     

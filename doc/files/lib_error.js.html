@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>example\tree.js - The bright-flow API</title>
+    <title>lib\error.js - The bright-flow API</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -96,82 +96,66 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: example\tree.js</h1>
+                        <h1 class="file-heading">File: lib\error.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * 列出目录下的所有文件
+ * Error
+ *
+ * @module bright-flow
+ * @author 老雷&lt;leizongmin@gmail.com&gt;
  */
 
-var path = require(&#x27;path&#x27;);
-var fs = require(&#x27;fs&#x27;);
-var _ = require(&#x27;../&#x27;);
+var util = require(&#x27;util&#x27;);
 
-// 要列出的目录
-var dir = path.resolve(process.argv[2]);
-
-// 输出文件名
-// indent:字符串前缀，isLast:是否为该级目录的最后一个文件, str:文件名
-var print = function (indent, isLast, str) {
-  console.log(indent + (isLast ? &#x27;└─ &#x27; : &#x27;├─ &#x27;) + str);
+/**
+ * 首字母大写
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function capitalize (str) {
+  return str[0].toUpperCase() + str.substr(1);
 };
 
-// 列出指定目录下的所有文件
-// dir:要列出的目录 indent:输出时的字符串前缀, isLast:是否为该级目录的最后一个文件
-// cb:回调函数，第一个参数为该目录及子目录下的文件数量
-var tree = function (dir, indent, isLast, cb) {
-  var indent = indent + (isLast ? &#x27;  &#x27; : &#x27;│ &#x27;);
+/**
+ * 创建一个Error对象
+ *
+ * @class BrightFlowError
+ * @param {String} code
+ * @param {String} message
+ * @param {Function} stackStartFunction
+ */
+function BrightFlowError (code, message, stackStartFunction) {
+  this.name = &#x27;BrightFlowError&#x27;;
+  this.code = code;
+  this.message = message || capitalize(code);
+  Error.captureStackTrace(this, stackStartFunction);
+}
 
-  // 读取本级目录下的所有文件名
-  fs.readdir(dir, function (err, files) {
-    if (err) {
-      print(indent, isLast, err);
-      cb();
-    } else {
+util.inherits(BrightFlowError, Error);
 
-      var subTotalFile = 0;
-      var lastIndex = files.length - 1;
+exports = module.exports = BrightFlowError;
 
-      // 开始读取列出该级的所有文件
-      _.each(files).do(function (name, i, list, done) {
+/**
+ * TIMEOUT
+ * @type String
+ */
+exports.TIMEOUT = &#x27;timeout&#x27;;
 
-        var file = path.resolve(dir, name);
-        var isLast = i &gt;= lastIndex;
+/**
+ * BREAK
+ * @type String
+ */
+exports.BREAK = &#x27;break&#x27;;
 
-        // 取文件属性，如果是目录，则继续列出子目录
-        fs.stat(file, function (err, stats) {
-          if (err) {
-            print(indent, isLast, err);
-            done();
-          } else {
-            // 输出
-            print(indent, isLast, name + (stats.isFile() ? &#x27; [size:&#x27; + stats.size + &#x27;]&#x27; : &#x27;&#x27;));
+/**
+ * MULTI_TIMES
+ * @type String
+ */
+exports.MULTI_TIMES = &#x27;multi_times&#x27;;
 
-            if (stats.isDirectory()) {
-              tree(file, indent, isLast, function (total) {
-                if (total &gt; 0) subTotalFile += total;
-                done();
-              });
-            } else {
-              done();
-            }
-          }
-        });
-        
-      }).end(function () {
-        // 回调函数
-        cb(files.length + subTotalFile);
-      });
-    }
-  });
-};
-
-
-var timestamp = Date.now();
-tree(dir, &#x27;&#x27;, true, function (total) {
-  console.log(&#x27;\ntotal %d files, spent %dms&#x27;, total, (Date.now() - timestamp));
-});
     </pre>
 </div>
 

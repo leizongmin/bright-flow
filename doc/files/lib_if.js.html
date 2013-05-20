@@ -41,15 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Each.html">Each</a></li>
+                <li><a href="../classes/BaseFlow.html">BaseFlow</a></li>
             
-                <li><a href="../classes/For.html">For</a></li>
+                <li><a href="../classes/BrightFlowError.html">BrightFlowError</a></li>
             
-                <li><a href="../classes/If.html">If</a></li>
+                <li><a href="../classes/EachFlow.html">EachFlow</a></li>
             
-                <li><a href="../classes/Parallel.html">Parallel</a></li>
+                <li><a href="../classes/ForFlow.html">ForFlow</a></li>
             
-                <li><a href="../classes/Series.html">Series</a></li>
+                <li><a href="../classes/IfFlow.html">IfFlow</a></li>
+            
+                <li><a href="../classes/ParallelFlow.html">ParallelFlow</a></li>
+            
+                <li><a href="../classes/SeriesFlow.html">SeriesFlow</a></li>
             
             </ul>
 
@@ -97,37 +101,57 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 /**
- * bright-flow
+ * IfFlow
  *
  * @module bright-flow
  * @author 老雷&lt;leizongmin@gmail.com&gt;
  */
 
+var BaseFlow = require(&#x27;./flow&#x27;);
+
+exports = module.exports = IfFlow;
 
 /**
  * if 流程控制对象
  *
- * @class If
+ * @class IfFlow
  * @param {Boolean} cond
  * @return {Object}
  */
-var flow = function (cond) {
-  if (!(this instanceof flow)) return new flow(cond);
-  this._cond = [cond];
-  this._fn = [];
+function IfFlow (cond) {
+  if (!(this instanceof IfFlow)) return new IfFlow(cond);
+  this._super();
+  this._data.cond = [this._formatCond(cond)];
+  this._data.fn = [];
+  this._test = this._testCond.bind(this);
 };
 
+// 继承
+BaseFlow.derive(IfFlow);
+
 /**
- * 执行函数
+ * 格式化测试条件
  *
- * @param {Function} fn
- * @param {Array} args
- * @return {Object}
+ * @param {Boolean|Function} cond 可以为布尔值、同步或异步函数：
+ *                            true
+ *                            function () { return true; }
+ *                            function (callback) { callback(true); } 
+ * @return {Function}
  */
-flow.prototype._call = function (fn, args) {
-  args = args || [];
-  args.push(this);
-  return fn.apply(this, args);
+IfFlow.prototype._formatCond = function (cond) {
+  if (typeof cond === &#x27;function&#x27;) {
+    if (cond.length &gt; 0) {
+      return cond;
+    } else {
+      return function (callback) {
+        callback(cond());
+      }
+    }
+  } else {
+    return function (callback) {
+      callback(cond);
+    };
+  }
 };
 
 /**
@@ -137,8 +161,8 @@ flow.prototype._call = function (fn, args) {
  * @param {Function} fn
  * @return {Object}
  */
-flow.prototype.then = function (fn) {
-  this._fn.push(fn);
+IfFlow.prototype.then = function (fn) {
+  this._data.fn.push(fn);
   return this;
 };
 
@@ -146,11 +170,11 @@ flow.prototype.then = function (fn) {
  * elseif
  *
  * @method elseif
- * @param {Boolean} cond
+ * @param {Boolean|Function} cond
  * @return {Object}
  */
-flow.prototype.elseif = function (cond) {
-  this._cond.push(cond);
+IfFlow.prototype.elseif = function (cond) {
+  this._data.cond.push(this._formatCond(cond));
   return this;
 };
 
@@ -161,21 +185,81 @@ flow.prototype.elseif = function (cond) {
  * @param {Function} fn
  * @return {Object}
  */
-flow.prototype.else = function (fn) {
-  this._fn.push(fn);
+IfFlow.prototype.else = function (fn) {
+  this._data.fn.push(fn);
   return this;
 };
 
 /**
- * timeout
+ * 完成一个步骤
  *
- * @method timeout
- * @param {Integer} ms
- * @return {Object}
+ * @method done
+ * @param {Object} err
  */
-flow.prototype.timeout = function (ms) {
-  this._timeout = ms;
-  return this;
+IfFlow.prototype._done = function (err) {
+  this._assert();
+  if (err) return this._return(err);
+  /*
+  if (this._data.test) {
+    // 执行成功一次即退出判断
+    this._return();
+  } else if (this._data.cond.length &lt; 1) {
+    // 后面已经没有其他条件判断
+    if (this._data.fn.length &gt; 0) {
+      // 还有Else部分
+      this._call(this._data.fn.shift(), [this.done]);
+    } else {
+      // 没有else部分，直接返回
+      this._return();
+    }
+  } else {
+    // 继续判断下一个条件
+    this._data.test = this._data.cond.shift();
+    if (this._data.test) {
+      // 判断成功则执行
+      this._call(this._data.fn.shift(), [this.done]);
+    } else {
+      // 不成功则忽略
+      this._data.fn.shift();
+      this.done();
+    }
+  }
+  */
+
+  // 如果已测试成功，直接返回
+  if (this._data.test) {
+    return this._return();
+  }
+
+  if (this._data.cond.length &gt; 0) {
+    // 若后面还有待测试的条件，则继续判断
+    var cond = this._data.cond.shift();
+    cond(this._test);
+  } else if (this._data.fn.length &gt; 0) {
+    // 若有else部分，则先执行
+    this._call(this._data.fn.shift(), [this.done]);
+  } else {
+    this._return();
+  }
+};
+
+/**
+ * 测试条件
+ *
+ * @param {Boolean} ok
+ */
+IfFlow.prototype._testCond = function (ok) {
+  this._data.test = ok;
+
+  if (ok) {
+    // 测试成功，执行当前函数，并返回
+    this._call(this._data.fn.shift(), [this.done]);
+    
+  } else {
+    // 测试失败，忽略当前函数
+    this._data.fn.shift();
+    this.done();
+  }
 };
 
 /**
@@ -184,58 +268,10 @@ flow.prototype.timeout = function (ms) {
  * @method end
  * @param {Function} callback
  */
-flow.prototype.end = function (callback) {
-  var me = this;
-  var cond = false;
-  var tid = null;
-  var hasReturn = false;
-
-  me.done = function () {
-    if (hasReturn) return;
-    if (cond) {
-      me.break();
-    } else if (me._cond.length &lt; 1) {
-      if (me._fn.length &gt; 0) {
-        me._call(me._fn.shift(), [me.done]);
-      } else {
-        me.break();
-      }
-    } else {
-      cond = me._cond.shift();
-      if (cond) {
-        me._call(me._fn.shift(), [me.done]);
-      } else {
-        me._fn.shift();
-        me.done();
-      }
-    }
-  };
-
-  me.break = function () {
-    if (hasReturn) return;
-    hasReturn = true;
-    if (tid) clearTimeout(tid);
-    me._fn = null;
-    me._cond = null;
-    callback(!!me.isTimeout);
-  };
-  
-  if (me._timeout &gt; 0) {
-    tid = setTimeout(function () {
-      me.isTimeout = true;
-      me.break();
-    }, me._timeout);
-  }
-
-  process.nextTick(function () {
-    me.done();
-  });
-  
+IfFlow.prototype.end = function (callback) {
+  this._start(this.done, callback);
   return this;
 };
-
-
-module.exports = exports = flow;
 
     </pre>
 </div>
