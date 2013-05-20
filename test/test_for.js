@@ -16,7 +16,8 @@ describe('#for', function () {
       data.push(i);
       i++;
       this.done();
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, [0,1,2,3,4,5,6,7,8,9]);
       done();
     });
@@ -35,40 +36,26 @@ describe('#for', function () {
         i++;
         this.done();
       }
-    }).end(function () {
+    }).end(function (err) {
+      assert.equal(err, null);
       assert.deepEqual(data, [0,1,2,3,4,5]);
       done();
     });
   });
-
-  it('timeout - 1', function (done) {
-    var i = 0;
-    var data = [];
+  
+  it('timeout', function (done) {
     _.for(function () {
-      return i < 10;
+      return true;
     }).do(function () {
-      data.push(i);
-      i++;
-      if (i < 5) this.done();
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, true);
-      assert.deepEqual(data, [0,1,2,3,4]);
-      done();
-    });
-  });
-
-  it('timeout - 2', function (done) {
-    var i = 0;
-    var data = [];
-    _.for(function () {
-      return i < 10;
-    }).do(function () {
-      data.push(i);
-      i++;
-      this.done();
-    }).timeout(100).end(function (isTimeout) {
-      assert.equal(isTimeout, false);
-      assert.deepEqual(data, [0,1,2,3,4,5,6,7,8,9]);
+      var me = this;
+      setTimeout(function () {
+        if (!me._returned) {
+          me.done();
+        }
+      }, 10);
+    }).timeout(100).end(function (err) {
+      assert.notEqual(err, null);
+      assert.equal(err.code, _.BrightFlowError.TIMEOUT);
       done();
     });
   });
