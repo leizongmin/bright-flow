@@ -16,7 +16,7 @@ npm install bright-flow
 ========
 
 ```html
-<script src="https://github.com/leizongmin/bright-flow/blob/master/build/bright-flow.min.js"></script>
+<script src="https://raw.github.com/leizongmin/bright-flow/master/build/bright-flow.min.js"></script>
 ```
 
 
