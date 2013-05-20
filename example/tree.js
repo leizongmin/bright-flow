@@ -32,9 +32,8 @@ var tree = function (dir, indent, isLast, cb) {
       var lastIndex = files.length - 1;
 
       // 开始读取列出该级的所有文件
-      _.each(files).do(function (name, i) {
+      _.each(files).do(function (name, i, list, done) {
 
-        var me = this;
         var file = path.resolve(dir, name);
         var isLast = i >= lastIndex;
 
@@ -42,7 +41,7 @@ var tree = function (dir, indent, isLast, cb) {
         fs.stat(file, function (err, stats) {
           if (err) {
             print(indent, isLast, err);
-            me.done();
+            done();
           } else {
             // 输出
             print(indent, isLast, name + (stats.isFile() ? ' [size:' + stats.size + ']' : ''));
@@ -50,10 +49,10 @@ var tree = function (dir, indent, isLast, cb) {
             if (stats.isDirectory()) {
               tree(file, indent, isLast, function (total) {
                 if (total > 0) subTotalFile += total;
-                me.done();
+                done();
               });
             } else {
-              me.done();
+              done();
             }
           }
         });
