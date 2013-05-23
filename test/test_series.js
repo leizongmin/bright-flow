@@ -139,4 +139,25 @@ describe('#series', function () {
     })
   });
 
+  it('#series - delay', function (done) {
+    var data = [];
+    var s = Date.now();
+    _.series().do(function (done) {
+      data.push(1);
+      done();
+    }).do(function (done) {
+      data.push(2);
+      done();
+    }).do(function (done) {
+      data.push(3);
+      done();
+    }).delay(100).end(function (err) {
+      var e = Date.now();
+      assert.equal(err, null);
+      assert.deepEqual(data, [1,2,3]);
+      assert.ok(e - s >= 100);
+      done();
+    });
+  });
+
 })

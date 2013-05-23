@@ -229,6 +229,20 @@ _.series().do(function (done) {
 });
 ```
 
+### 延时启动
+
+在执行 `.end()` 前，通过 `.delay()` 来设置延时时间（单位为毫秒），将会在执行
+`.end()` 后等待指定时间再开始启动任务
+
+```
+_.series().do(function (done) {
+  // do nothing
+}).delay(1000).end(function (err) {
+  if (err) throw err;
+  console.log('done.');
+});
+```
+
 
 授权
 ==========
