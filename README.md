@@ -3,6 +3,8 @@
 bright-flow
 ===========
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/leizongmin/bright-flow.svg)](https://greenkeeper.io/)
+
 JavaScript异步流程控制库
 
 安装
